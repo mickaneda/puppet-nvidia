@@ -1,0 +1,23 @@
+{
+  "name": "puppet-nvidia",
+  "version": "0.0.1",
+  "author": "Michiru Kaneda",
+  "summary": "Puppet module to install nvidia driver, cuda",
+  "license": "Apache-2.0",
+  "source": "https://github.com/mickaneda/puppet-nvidia",
+  "description": "Puppet module to install nvidia driver, cuda",
+  "issues_url": "https://github.com/mickaneda/puppet-nvidia/issues",
+  "tags": [
+  ],
+  "project_page": "https://github.com/mickaneda/puppet-nvidia",
+  "requirements": [
+  ],
+  "operatingsystem_support": [
+  ],
+  "dependencies": [
+    {
+      "name": "puppetlabs/reboot",
+      "version_requirement": ">= 2.1.0"
+    }
+  ]
+}
