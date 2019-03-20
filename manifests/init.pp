@@ -43,9 +43,11 @@ class nvidia(
       path => $installer,
       source => "puppet:///modules/${module_name}/nvidia_driver.sh",
       mode => "0755",
+      require => Reboot['after_run'],
     }
     exec {"nvidia_driver_installation":
-      command => "${installer} ${driver}"
+      command => "${installer} ${driver}",
+      require => File['nvidia_driver_installation file'],
     }
   }
 }
