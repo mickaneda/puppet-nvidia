@@ -1,15 +1,24 @@
 class nvidia(
-  $install_cuda_rpm = false,
-  $rpm_cuda_source = "https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-10.1.105-1.x86_64.rpm",
+  $cuda_repo = "cuda-repo-rhel7",
+  $cuda_rpm_source = "https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-10.1.105-1.x86_64.rpm",
   $cuda_version = ["10-0"],
   $driver = "http://us.download.nvidia.com/XFree86/Linux-x86_64/418.43/NVIDIA-Linux-x86_64-418.43.run",
-  $installer = "",
+  $kernel_devel = true,
+  $epel_release = true,
 ){
-  if $install_cuda_rpm {
-    package {$rpm_cuda:
+  package {$cuda_repo,
+    ensure => "installed",
+    source => $cuda_rpm_source,
+    provider => "rpm",
+  }
+  if $kernel_devel {
+    package {"kernel-devel",
       ensure => "installed",
-      source => $rpm_cuda_source,
-      provider => "rpm",
+    }
+  }
+  if $epel_release {
+    package {"epel-release",
+      ensure => "installed",
     }
   }
   if $cuda_version =~ Array {
@@ -36,7 +45,7 @@ class nvidia(
       mode => "0755",
     }
     exec {"nvidia_driver_installation":
-      command => "${installer}"
+      command => "${installer} ${driver}"
     }
   }
 }
