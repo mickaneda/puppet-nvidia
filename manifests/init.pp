@@ -35,7 +35,8 @@ class nvidia(
     }
   }
   reboot { 'after_run':
-    apply  => finished,
+    apply  => immediately,
+    timeout  => 0,
   }
   if $driver != "" {
     $installer = "/tmp/nvidia_driver.sh"
