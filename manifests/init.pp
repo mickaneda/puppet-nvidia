@@ -44,7 +44,7 @@ class nvidia(
     mode => "0755",
   }
   file {"cuda_setup_file":
-    path => "/usr/local/",
+    path => "/usr/local/setup_cuda.sh",
     source => "puppet:///modules/${module_name}/setup_cuda.sh",
     mode => "0644",
   }
