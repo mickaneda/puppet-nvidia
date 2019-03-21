@@ -34,9 +34,19 @@ class nvidia(
       notify => Reboot['after_run'],
     }
   }
-  reboot { 'after_run':
+  reboot { "after_run":
     apply  => immediately,
     timeout  => 0,
+  }
+  file {"local_directory":
+    ensure => "directory",
+    path => "/usr/local",
+    mode => "0755",
+  }
+  file {"cuda_setup_file":
+    path => "/usr/local/",
+    source => "puppet:///modules/${module_name}/setup_cuda.sh",
+    mode => "0644",
   }
   if $driver != "" {
     $installer = "/tmp/nvidia_driver.sh"
