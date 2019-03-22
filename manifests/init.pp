@@ -59,6 +59,7 @@ class nvidia(
     exec {"nvidia_driver_installation":
       command => "${installer} ${driver}",
       require => File['nvidia_driver_installation file'],
+      timeout => 1800,
     }
   }
 }
