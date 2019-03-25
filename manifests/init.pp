@@ -1,10 +1,15 @@
 class nvidia(
+  $kernel_devel = true,
+  $epel_release = true,
   $cuda_repo = "cuda-repo-rhel7",
   $cuda_rpm_source = "https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-10.1.105-1.x86_64.rpm",
   $cuda_version = ["10-0"],
   $driver = "http://us.download.nvidia.com/XFree86/Linux-x86_64/418.43/NVIDIA-Linux-x86_64-418.43.run",
-  $kernel_devel = true,
-  $epel_release = true,
+  $cudnn = {
+    "10-1" => "http://developer.download.nvidia.com/compute/redist/cudnn/v7.5.0/cudnn-10.1-linux-x64-v7.5.0.56.tgz",
+    "10-0" => "http://developer.download.nvidia.com/compute/redist/cudnn/v7.5.0/cudnn-10.0-linux-x64-v7.5.0.56.tgz",
+    "9-2" => "http://developer.download.nvidia.com/compute/redist/cudnn/v7.5.0/cudnn-9.2-linux-x64-v7.5.0.56.tgz",
+  },
 ){
   package {$cuda_repo:
     ensure => "installed",
@@ -32,6 +37,17 @@ class nvidia(
     package {"cuda-${c}":
       ensure => "installed",
       notify => Reboot['after_run'],
+    }
+    if $cudnn[$c] {
+      file {"script_cudnn_for_cuda-${c}":
+        path => "/tmp/cudnn_${c}.sh",
+        source => "puppet:///modules/${module_name}/cudnn.sh",
+        mode => "0755",
+      }
+      exec {"install_cudnn_for_cuda-${c}":
+        command => "/tmp/cudnn_${c}.sh ${c} ${cudnn[$c]}",
+        require => File["script_cudnn_for_cuda-${c}"],
+      }
     }
   }
   reboot { "after_run":
